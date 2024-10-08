@@ -49,6 +49,42 @@ describe('Gameboard', () => {
     setShipsSpy.mockRestore();
   });
 
+  it('should add ships vertically', () => {
+    const mockShip1 = Ship(3);
+    const mockShip2 = Ship(3);
+
+    const setShipsSpy = jest.spyOn(testGameboard, 'setShips')
+
+    testGameboard.toggleOrientation()
+    
+    // Add Ship Vertically
+    testGameboard.setShips([
+      {ship: mockShip1, coordinates: [[1, 1]]}
+    ]);
+
+    expect(setShipsSpy).toHaveBeenCalledWith([
+      { ship: mockShip1, coordinates: [[1, 1]] }
+    ]);
+
+    // Can't add ship
+    expect(() =>
+      testGameboard.setShips([
+        {ship: mockShip2, coordinates: [[0, 1]]}
+      ])
+    ).toThrow('this 1,1 coordinate not available');
+
+    // Set back ro horizontal and ship can be added
+    testGameboard.setShips([
+      {ship: mockShip1, coordinates: [[0, 0]]}
+    ]);
+
+    expect(setShipsSpy).toHaveBeenCalledWith([
+      { ship: mockShip1, coordinates: [[0, 0]] }
+    ]);
+
+    setShipsSpy.mockRestore();
+  });
+
   it('should not add ships at not available coordinates', () => {
     const mockShip1 = Ship(3);
     const mockShip2 = Ship(3);
