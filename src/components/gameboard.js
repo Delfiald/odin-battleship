@@ -21,13 +21,19 @@ const Gameboard = () => {
 
       attackedCoordinates.push([x, y])
 
+      let isHit = false;
+
       shipCoordinates.forEach(shipObj => {
         if (containsArray(shipObj.coordinates, [x, y])) {
           shipObj.ship.hit();
+          isHit = true
         }
       })
       
-      return attackedCoordinates
+      return {
+        coordinates: [x, y],
+        hit: isHit
+      }
     }
     throw new Error('False Attack Coordinates')
   }

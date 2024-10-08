@@ -44,24 +44,42 @@ describe('Game', () => {
   });
 
   it('should return attack coordinates', () => {
-    expect(gameInstance.playerAttack(1, 1)).toStrictEqual([[1, 1]]);
+    expect(gameInstance.playerAttack(1, 1)).toStrictEqual({
+      coordinates: [1, 1],
+      hit: false
+    });
   });
 
   it('should sink a ship', () => {
     const switchTurnsSpy = jest.spyOn(gameInstance, 'switchTurns');
     const allShipsSunkSpy = jest.spyOn(player2Ship, 'allShipsSunk');
 
-    expect(gameInstance.playerAttack(1, 3)).toStrictEqual([[1, 3]]);
+    expect(gameInstance.playerAttack(1, 3)).toStrictEqual({
+      coordinates: [1, 3],
+      hit: true
+    });;
     expect(switchTurnsSpy).toHaveBeenCalled();
 
-    expect(gameInstance.playerAttack(2, 3)).toStrictEqual([[2, 3]]);
+    expect(gameInstance.playerAttack(2, 3)).toStrictEqual({
+      coordinates: [2, 3],
+      hit: true
+    });
     expect(switchTurnsSpy).toHaveBeenCalledTimes(2);
 
-    expect(gameInstance.playerAttack(3, 3)).toStrictEqual([[1, 3], [3, 3]]);
+    expect(gameInstance.playerAttack(3, 3)).toStrictEqual({
+      coordinates: [3, 3],
+      hit: true
+    });
     expect(switchTurnsSpy).toHaveBeenCalledTimes(3);
 
-    expect(gameInstance.playerAttack(3, 3)).toStrictEqual([[2, 3], [3, 3]]);
-    expect(gameInstance.playerAttack(2, 3)).toStrictEqual([[1, 3], [3, 3], [2, 3]]);
+    expect(gameInstance.playerAttack(3, 3)).toStrictEqual({
+      coordinates: [3, 3],
+      hit: true
+    });
+    expect(gameInstance.playerAttack(2, 3)).toStrictEqual({
+      coordinates: [2, 3],
+      hit: true
+    });
 
     // Check if all player 2's ships are sunk
     expect(switchTurnsSpy).toHaveBeenCalledTimes(4);

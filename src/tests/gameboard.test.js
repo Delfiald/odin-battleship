@@ -17,15 +17,27 @@ describe('Gameboard', () => {
   });
 
   it('should add attack coordinates', () => {
-    expect(testGameboard.receiveAttack(1, 0)).toStrictEqual([[1, 0]]);
+    expect(testGameboard.receiveAttack(1, 0)).toStrictEqual({
+      coordinates: [1, 0],
+      hit: false
+    });
 
-    expect(testGameboard.receiveAttack(1, 2)).toStrictEqual([[1, 0], [1, 2]]);
+    expect(testGameboard.receiveAttack(1, 2)).toStrictEqual({
+      coordinates: [1, 2],
+      hit: false
+    });;
 
-    expect(testGameboard.receiveAttack(2, 0)).toStrictEqual([[1, 0], [1, 2], [2, 0]]);
+    expect(testGameboard.receiveAttack(2, 0)).toStrictEqual({
+      coordinates: [2, 0],
+      hit: false
+    });
   });
 
   it('should not add attack coordinates', () => {
-    expect(testGameboard.receiveAttack(1, 0)).toStrictEqual([[1, 0]]);
+    expect(testGameboard.receiveAttack(1, 0)).toStrictEqual({
+      coordinates: [1, 0],
+      hit: false
+    });
 
     expect(() => testGameboard.receiveAttack(1, 0)).toThrow('False Attack Coordinates');
   });
@@ -117,12 +129,21 @@ describe('Gameboard', () => {
       {ship: mockShip, coordinates: [[1, 1]]}
     ])
 
-    expect(testGameboard.receiveAttack(1, 2)).toStrictEqual([[1, 2]]);
-    expect(testGameboard.receiveAttack(2, 1)).toStrictEqual([[1, 2], [2, 1]]);
+    expect(testGameboard.receiveAttack(1, 2)).toStrictEqual({
+      coordinates: [1, 2],
+      hit: false
+    });
+    expect(testGameboard.receiveAttack(2, 1)).toStrictEqual({
+      coordinates: [2, 1],
+      hit: true
+    });
 
     expect(mockShip.hit).toHaveBeenCalledTimes(1);
     
-    expect(testGameboard.receiveAttack(1, 1)).toStrictEqual([[1, 2], [2, 1], [1, 1]]);
+    expect(testGameboard.receiveAttack(1, 1)).toStrictEqual({
+      coordinates: [1, 1],
+      hit: true
+    });
 
     expect(mockShip.hit).toHaveBeenCalledTimes(2);
 
