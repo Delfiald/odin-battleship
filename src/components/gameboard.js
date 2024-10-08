@@ -1,6 +1,7 @@
 const Gameboard = () => {
   const shipCoordinates = []
   const attackedCoordinates = [];
+  let isHorizontal = true;
 
   const containsArray = (arr, target) => arr.some(subArray => 
     subArray.length === target.length && 
@@ -33,12 +34,14 @@ const Gameboard = () => {
 
   const allShipsSunk = () => shipCoordinates.every(shipObj => shipObj.ship.isSunk())
 
-  
+  const toggleOrientation = () => {
+    isHorizontal = !isHorizontal;
+  };
 
-  const setShipCoordinates = (shipLength, shipStartCoordinate, isHorizontal = true) => {
+  const setShipCoordinates = (shipLength, shipStartCoordinate, horizontal) => {
     const newCoordinates = []
     const currentCoordinate = shipStartCoordinate;
-    if(isHorizontal) {
+    if(horizontal) {
       for(let i = 0; i < shipLength; i+=1){
         newCoordinates.push([currentCoordinate[0] + i, currentCoordinate[1]]);
       }
@@ -56,7 +59,7 @@ const Gameboard = () => {
       const { ship, coordinates } = shipObj;
       const shipLength = ship.shipProperty.length;
 
-      const newCoordinates = setShipCoordinates(shipLength, coordinates[0]);
+      const newCoordinates = setShipCoordinates(shipLength, coordinates[0], isHorizontal);
 
       newCoordinates.forEach(coordinate => {
         const [x, y] = coordinate;
@@ -70,13 +73,16 @@ const Gameboard = () => {
       });
       
       shipCoordinates.push({ ship, coordinates: newCoordinates });
+
+      isHorizontal = true;
     });
   }
 
   return {
     receiveAttack,
     allShipsSunk,
-    setShips
+    setShips,
+    toggleOrientation
   }
 }
 
