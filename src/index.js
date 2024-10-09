@@ -1,5 +1,10 @@
 import './css/style.css';
+import appendDom from './dom/dom';
 
 console.log('Hello, World!');
 
-export default () => true;
+(() => {
+  const body = document.querySelector('body')
+
+  body.appendChild(appendDom)
+})()
