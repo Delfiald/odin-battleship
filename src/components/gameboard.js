@@ -67,6 +67,8 @@ const Gameboard = () => {
 
       const newCoordinates = setShipCoordinates(shipLength, coordinates[0], isHorizontal);
 
+      console.log(newCoordinates)
+
       newCoordinates.forEach(coordinate => {
         const [x, y] = coordinate;
         if (shipCoordinates.some(existingShip => containsArray(existingShip.coordinates, coordinate))) {
