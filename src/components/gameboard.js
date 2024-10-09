@@ -1,5 +1,7 @@
+import Ship from "./ship";
+
 const Gameboard = () => {
-  const shipCoordinates = []
+  let shipCoordinates = []
   const attackedCoordinates = [];
   let isHorizontal = true;
 
@@ -67,6 +69,7 @@ const Gameboard = () => {
 
       const newCoordinates = setShipCoordinates(shipLength, coordinates[0], isHorizontal);
 
+      console.log('try')
       console.log(newCoordinates)
 
       newCoordinates.forEach(coordinate => {
@@ -86,11 +89,94 @@ const Gameboard = () => {
     });
   }
 
+  const shipsList = () => {
+    const carrier = Ship(5);
+    const battleship = Ship(4)
+    const destroyer = Ship(3)
+    const submarine = Ship(3)
+    const patrolBoat = Ship(2)
+
+    return [carrier, battleship, destroyer, submarine, patrolBoat];
+  }
+
+  const createShipFactory = () => {
+    const ships = shipsList();
+    let currentIndex = 0;
+  
+    const getCurrentShip = () => {
+      if (currentIndex >= ships.length) {
+        throw new Error('All ships have been placed');
+      }
+      return ships[currentIndex];
+    };
+  
+    const placeNextShip = (coordinates) => {
+      const ship = getCurrentShip();
+      return { ship, coordinates };
+    };
+
+    const incrementIndex = () => {
+      currentIndex += 1;
+  };
+  
+    return {
+      getCurrentShip,
+      placeNextShip,
+      incrementIndex,
+      allShipsPlaced: () => currentIndex >= ships.length,
+    };
+  };
+
+  const setRandomShip = () => {
+    const factory = createShipFactory()
+    let x;
+    let y;
+
+    while (!factory.allShipsPlaced()) {
+      let isValidPlacement = false
+      let tempCoordinates;
+      while (!isValidPlacement) {
+        x = Math.floor(Math.random() * 10)
+        y = Math.floor(Math.random() * 10)
+
+        isHorizontal = Math.random() >= 0.5;
+
+        tempCoordinates = [[x, y]]
+
+        console.log(tempCoordinates)
+
+        try {
+          setShips([factory.placeNextShip(tempCoordinates)]);
+          factory.incrementIndex();
+          isValidPlacement = true;
+        } catch (error) {
+          console.log(error.message);
+        }
+
+        console.log(isValidPlacement)
+      }
+    }
+
+    shipCoordinates.forEach(item => {
+      console.log(item.ship)
+      console.log(item.coordinates)
+    })
+
+    return shipCoordinates;
+  }
+
+  const resetBoard = () => {
+    shipCoordinates = [];
+  }
+
   return {
     receiveAttack,
     allShipsSunk,
     setShips,
-    toggleOrientation
+    toggleOrientation,
+    resetBoard,
+    setRandomShip,
+    createShipFactory
   }
 }
 
