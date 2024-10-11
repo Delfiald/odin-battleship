@@ -42,7 +42,9 @@ const Game = (player1, player2) => {
       }
 
       return attackResult
-    }
+    },
+
+    getCurrentPlayer: () => currentPlayer
   }
 
   return gameMethods

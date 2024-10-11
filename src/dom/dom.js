@@ -150,8 +150,6 @@ const createShipPlacement = (playerIndex) => {
 }
 
 // Place Ship Section
-
-
 const createPlaceShip = () => {
   const placeShip = document.createElement('section')
   placeShip.className = 'ship-placement'

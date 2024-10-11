@@ -49,7 +49,7 @@ const Gameboard = () => {
   const setShipCoordinates = (shipLength, shipStartCoordinate, horizontal) => {
     const newCoordinates = []
     const currentCoordinate = shipStartCoordinate;
-    if(horizontal) {
+    if(!horizontal) {
       for(let i = 0; i < shipLength; i+=1){
         newCoordinates.push([currentCoordinate[0] + i, currentCoordinate[1]]);
       }
@@ -89,6 +89,10 @@ const Gameboard = () => {
     });
   }
 
+  const resetBoard = () => {
+    shipCoordinates = [];
+  }
+
   const shipsList = () => {
     const carrier = Ship(5);
     const battleship = Ship(4)
@@ -117,20 +121,33 @@ const Gameboard = () => {
 
     const incrementIndex = () => {
       currentIndex += 1;
-  };
+      console.log(currentIndex)
+    };
+
+    const getCurrentIndex = () => currentIndex
+
+    const resetCurrentIndex = () => {
+      currentIndex = 0
+    }
   
     return {
       getCurrentShip,
       placeNextShip,
       incrementIndex,
       allShipsPlaced: () => currentIndex >= ships.length,
+      getCurrentIndex,
+      resetCurrentIndex
     };
   };
 
-  const setRandomShip = () => {
-    const factory = createShipFactory()
+  const setRandomShip = (factory) => {
     let x;
     let y;
+
+    if(factory.getCurrentIndex() >= 5) {
+      resetBoard()
+      factory.resetCurrentIndex()
+    }
 
     while (!factory.allShipsPlaced()) {
       let isValidPlacement = false
@@ -165,9 +182,9 @@ const Gameboard = () => {
     return shipCoordinates;
   }
 
-  const resetBoard = () => {
-    shipCoordinates = [];
-  }
+  const getShipCoordinates = () => [...shipCoordinates];
+
+  const getOrientation = () => isHorizontal;
 
   return {
     receiveAttack,
@@ -176,7 +193,9 @@ const Gameboard = () => {
     toggleOrientation,
     resetBoard,
     setRandomShip,
-    createShipFactory
+    createShipFactory,
+    getShipCoordinates,
+    getOrientation
   }
 }
 

@@ -494,6 +494,15 @@ main > section .board-wrapper .board > div.hit {
   cursor: pointer;
 }
 
+.ship-placement-container .board-wrapper .board > div.hovered,
+.ship-placement-container .board-wrapper .board > div.set {
+  background: var(--color-dark-400);
+}
+
+.ship-placement-container .board-wrapper .board > div.hovered.set {
+  background: red;
+}
+
 .ship-placement .placement-footer {
   width: 100%;
   display: flex;
