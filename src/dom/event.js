@@ -213,21 +213,28 @@ const event = (gameState) => {
       const y = Number(cellCoordinate[1])
       let player;
       let shipFactory;
+      let board;
       
       if(target.closest('.ship-placement-player-1')){
         player = gameState.getPlayers().player1;
         shipFactory = gameState.getShipFactory('player1');
+        board = document.querySelector('.ship-placement-player-1 .board')
       }else if(target.closest('.ship-placement-player-2')){
         player = gameState.getPlayers().player2;
         shipFactory = gameState.getShipFactory('player2');
+        board = document.querySelector('.ship-placement-player-2 .board')
       }
       
       try {
         player.gameboard.setShips([shipFactory.placeNextShip([[x, y]])])
         shipFactory.incrementIndex()
         renderPlaceShip()
+        if(shipFactory.allShipsPlaced()) {
+          console.log('test')
+          board.classList.add('disabled');
+        }
       }catch(error) {
-        prompt(error);
+        return false;
       }
     }else if(target.closest('.ship-placement .random-btn')) {
       if(target.closest('.ship-placement-player-1')){
@@ -243,10 +250,12 @@ const event = (gameState) => {
         gameState.player1.gameboard.resetBoard()
         gameState.resetShipFactoryForPlayer('player1')
         resetPlaceShip('player1')
+        document.querySelector('.ship-placement-player-1 .board').classList.remove('disabled')
       }else if(target.closest('.ship-placement-player-2')){
         gameState.player2.gameboard.resetBoard()
         gameState.resetShipFactoryForPlayer('player2')
         resetPlaceShip('player2')
+        document.querySelector('.ship-placement-player-2 .board').classList.remove('disabled')
       }
     }
   }

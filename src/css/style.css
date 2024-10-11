@@ -494,6 +494,10 @@ main > section .board-wrapper .board > div.hit {
   cursor: pointer;
 }
 
+.ship-placement-container .board-wrapper .board.disabled {
+  pointer-events: none;
+}
+
 .ship-placement-container .board-wrapper .board > div.hovered,
 .ship-placement-container .board-wrapper .board > div.set {
   background: var(--color-dark-400);
