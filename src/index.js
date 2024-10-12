@@ -8,7 +8,6 @@ import GameState from './game/gameState';
 
   const gameState = GameState()
 
-  body.appendChild(appendDom.placeOnePlayer())
-  body.appendChild(appendDom.appendMain())
+  body.appendChild(appendDom.appendHome())
   event(gameState)
 })()

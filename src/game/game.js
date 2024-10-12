@@ -8,37 +8,37 @@ const Game = (player1, player2) => {
 
   const gameMethods = {
     isComputerPlayer: () => {
+      let x; let y;
       if(!currentPlayer.isHuman) {
         try{
-          const [x, y] = computerPlayer.setAttackCoordinate()
-          console.log(`AI attacking at (${x}, ${y})`);
-          const attackResult = gameMethods.playerAttack(x, y)
-          console.log('AI attack result:', attackResult);
-          if(attackResult.hit){
-            computerPlayer.setIsHit(true)
-          }else {
-            computerPlayer.setIsHit(false)
-          }
-          computerPlayer.setLatestCoordinate([x, y]);
+          [x, y] = computerPlayer.setAttackCoordinate()
         }catch(error) {
-          console.log('Error: ', error.message)
+          return error
         }
       }
+
+      return [x, y]
     },
     switchTurns: () => {
       [currentPlayer, opponentPlayer] = [opponentPlayer, currentPlayer];
-      if(!currentPlayer.isHuman){
-        gameMethods.isComputerPlayer();
-      }
     },
     playerAttack: (x, y) => {
       const attackResult = currentPlayer.attack(opponentPlayer.gameboard, x, y);
+
+      if(!currentPlayer.isHuman) {
+        if(attackResult.hit){
+          computerPlayer.setIsHit(true)
+        }else {
+          computerPlayer.setIsHit(false)
+        }
+        computerPlayer.setLatestCoordinate([x, y]);
+      }
 
       const allShipsSunk = opponentPlayer.gameboard.allShipsSunk()
       if(!allShipsSunk){
         gameMethods.switchTurns();
       }else {
-        console.log('game ended')
+        attackResult.gameOver = true;
       }
 
       return attackResult

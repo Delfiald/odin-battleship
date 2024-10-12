@@ -7,6 +7,10 @@ const event = (gameState) => {
     let cells
     if(player === 'player1'){
       cells = document.querySelectorAll('.ship-placement-player-1 .cell')
+      const player1SectionCells = document.querySelectorAll('.player-1-section .cell');
+      player1SectionCells.forEach(cell => {
+        cell.classList.remove('set');
+      });
     }else {
       cells = document.querySelectorAll('.ship-placement-player-2 .cell')
     }
@@ -37,6 +41,12 @@ const event = (gameState) => {
 
     addClassToCells(player1Coordinates, 'ship-placement-player-1');
     addClassToCells(player2Coordinates, 'ship-placement-player-2');
+
+    if(!gameState.player2.isHuman){
+      addClassToCells(player1Coordinates, 'player-1-section')
+    }else {
+      // const player = gameState.game.currentPlayer;
+    }
   }
 
   const handleShipHoverEvents = (target) => {
@@ -195,14 +205,29 @@ const event = (gameState) => {
       if(gameState.getShipFactory('player1').allShipsPlaced() && gameState.getShipFactory('player2').allShipsPlaced()){
         shipPlacement.remove()
         document.querySelector('main .player-1-section').classList.add('active')
-      }else{
-        prompt('place all ships')
+        gameState.startGame()
+      }else if (target.closest('.ship-placement-container.one-player')) {
+        const player1 = document.querySelector('.ship-placement-player-1 .board-wrapper');
+        player1.classList.add('shake');
+        player1.addEventListener('animationend', () => {
+          player1.classList.remove('shake');
+        });
+      } else {
+        const player2 = document.querySelector('.ship-placement-player-2 .board-wrapper');
+        player2.classList.add('shake');
+        player2.addEventListener('animationend', () => {
+          player2.classList.remove('shake');
+        });
       }
     }else if(target.closest('.ship-placement .next-btn')) {
       if(gameState.getShipFactory('player1').allShipsPlaced()){
         scrollHorizontal(target)
       }else{
-        prompt('place all ships')
+        const player1 = document.querySelector('.ship-placement-player-1 .board-wrapper')
+        player1.classList.add('shake')
+        player1.addEventListener('animationend', () => {
+          player1.classList.remove('shake')
+        })
       }
     }else if(target.closest('.ship-placement .previous-btn')) {
       scrollHorizontal(target)
@@ -230,20 +255,26 @@ const event = (gameState) => {
         shipFactory.incrementIndex()
         renderPlaceShip()
         if(shipFactory.allShipsPlaced()) {
-          console.log('test')
           board.classList.add('disabled');
         }
       }catch(error) {
-        return false;
+        board.parentElement.classList.add('shake')
+        board.parentElement.addEventListener('animationend', () => {
+          board.parentElement.classList.remove('shake')
+        })
       }
     }else if(target.closest('.ship-placement .random-btn')) {
+      let board;
       if(target.closest('.ship-placement-player-1')){
         gameState.player1.gameboard.setRandomShip(gameState.shipFactory1)
         resetPlaceShip('player1')
+        board = document.querySelector('.ship-placement-player-1 .board')
       }else if(target.closest('.ship-placement-player-2')){
         gameState.player2.gameboard.setRandomShip(gameState.shipFactory2)
         resetPlaceShip('player2')
+        board = document.querySelector('.ship-placement-player-2 .board')
       }
+      board.classList.add('disabled');
       renderPlaceShip()
     }else if(target.closest('.ship-placement .reset-btn')) {
       if(target.closest('.ship-placement-player-1')){
@@ -261,30 +292,54 @@ const event = (gameState) => {
   }
 
   const handleBoardEvents = (target) => {
-    // const board = document.querySelector('.board')
     const player1Section = document.querySelector('.player-1-section')
     const player2Section = document.querySelector('.player-2-section')
-    const cell = target.closest('.board .cell');
+    const cell = target.closest('main .board .cell');
     if(cell){
-      // Check Cells if hit or miss
       const cellCoordinate = cell.dataset.cell.split(',')
-      const x = cellCoordinate[0]
-      const y = cellCoordinate[1]
+      const x = Number(cellCoordinate[0])
+      const y = Number(cellCoordinate[1])
 
-      // const attackResult = gameInstance.playerAttack(x, y)
+      const attackResult = gameState.game.playerAttack(x, y)
 
-      if(cell) {
+      if(attackResult.hit) {
         cell.classList.add('hit')
       }else {
         cell.classList.add('missed')
       }
 
-      if(player1Section.classList.contains('active')){
-        player1Section.classList.remove('active')
-        player2Section.classList.add('active')
-      }else if(player2Section.classList.contains('active')) {
+      if (attackResult.gameOver) {
         player1Section.classList.add('active')
-        player2Section.classList.remove('active')
+        player2Section.classList.add('active')
+      } else if (gameState.game.getCurrentPlayer() === gameState.player2) {
+        player1Section.classList.remove('active');
+        player2Section.classList.add('active');
+
+        if(!gameState.game.getCurrentPlayer().isHuman){
+          setTimeout(() => {
+            const [aix, aiy] = gameState.game.isComputerPlayer()
+            const aiAttack = gameState.game.playerAttack(aix, aiy)
+
+            const p1Cell = document.querySelector(`.player-1-section .cell[data-cell="${aix}, ${aiy}"]`)
+
+            if(aiAttack.hit) {
+              p1Cell.classList.add('hit')
+            }else {
+              p1Cell.classList.add('missed')
+            }
+
+            player1Section.classList.add('active');
+            player2Section.classList.remove('active');
+
+            if (aiAttack.gameOver) {
+              player1Section.classList.add('active')
+              player2Section.classList.add('active')
+            }
+          }, 1000);
+        }
+      } else if (gameState.game.getCurrentPlayer() === gameState.player1) {
+        player1Section.classList.add('active');
+        player2Section.classList.remove('active');
       }
     }
   }
@@ -298,8 +353,6 @@ const event = (gameState) => {
     handleShipPlacementEvents(target);
     handleBoardEvents(target)
   });
-
-  addShipPlacementEvent();
 }
 
 export default event;

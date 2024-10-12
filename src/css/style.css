@@ -95,13 +95,13 @@ main > section {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: .5;
+  opacity: 1;
   transition: var(--transition-fast) opacity ease-in-out;
 }
 
 main > section.active {
-  opacity: 1;
-  pointer-events: auto;
+  opacity: .5;
+  pointer-events: none;
 }
 
 main > section .player-information {
@@ -126,7 +126,7 @@ main > section .board-wrapper .board {
   gap: 3px;
 }
 
-main > section:not(.active) .board-wrapper .board {
+main > section.active .board-wrapper .board {
   cursor: not-allowed;
 }
 
@@ -136,7 +136,7 @@ main > section .board-wrapper .board > div {
 }
 
 main > section:not(.active) .board-wrapper .board > div {
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 main > section .board-wrapper .board > div:hover {
@@ -145,7 +145,8 @@ main > section .board-wrapper .board > div:hover {
 
 main > section .board-wrapper .board > div.missed {
   pointer-events: none;
-  opacity: 0;
+  opacity: 1;
+  background-color: yellow;
   transition: var(--transition-fast) all ease-in-out;
 }
 
@@ -480,6 +481,10 @@ main > section .board-wrapper .board > div.hit {
   grid-template-rows: calc(75vh - 3.5rem);
 }
 
+.ship-placement-container .board-wrapper.shake {
+  animation: shake-animation .2s ease forwards;
+}
+
 .ship-placement-container .board {
   width: inherit;
   height: inherit;
@@ -499,7 +504,7 @@ main > section .board-wrapper .board > div.hit {
 }
 
 .ship-placement-container .board-wrapper .board > div.hovered,
-.ship-placement-container .board-wrapper .board > div.set {
+.board-wrapper .board > div.set {
   background: var(--color-dark-400);
 }
 
@@ -574,4 +579,18 @@ main > section .board-wrapper .board > div.hit {
   100% {
     text-shadow: 0px 0px 5px var(--color-light-200);
   }
+}
+
+@keyframes shake-animation {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-5px, 5px); }
+  20% { transform: translate(5px, -5px); }
+  30% { transform: translate(-5px, 5px); }
+  40% { transform: translate(5px, -5px); }
+  50% { transform: translate(-5px, 5px); }
+  60% { transform: translate(5px, -5px); }
+  70% { transform: translate(-5px, 5px); }
+  80% { transform: translate(5px, -5px); }
+  90% { transform: translate(-5px, 5px); }
+  100% { transform: translate(0, 0); }
 }

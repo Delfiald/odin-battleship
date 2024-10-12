@@ -69,9 +69,6 @@ const Gameboard = () => {
 
       const newCoordinates = setShipCoordinates(shipLength, coordinates[0], isHorizontal);
 
-      console.log('try')
-      console.log(newCoordinates)
-
       newCoordinates.forEach(coordinate => {
         const [x, y] = coordinate;
         if (shipCoordinates.some(existingShip => containsArray(existingShip.coordinates, coordinate))) {
@@ -121,7 +118,6 @@ const Gameboard = () => {
 
     const incrementIndex = () => {
       currentIndex += 1;
-      console.log(currentIndex)
     };
 
     const getCurrentIndex = () => currentIndex
@@ -160,24 +156,15 @@ const Gameboard = () => {
 
         tempCoordinates = [[x, y]]
 
-        console.log(tempCoordinates)
-
         try {
           setShips([factory.placeNextShip(tempCoordinates)]);
           factory.incrementIndex();
           isValidPlacement = true;
         } catch (error) {
-          console.log(error.message);
+          // return error
         }
-
-        console.log(isValidPlacement)
       }
     }
-
-    shipCoordinates.forEach(item => {
-      console.log(item.ship)
-      console.log(item.coordinates)
-    })
 
     return shipCoordinates;
   }
