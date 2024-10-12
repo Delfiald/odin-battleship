@@ -37,7 +37,7 @@ const Gameboard = () => {
         hit: isHit
       }
     }
-    throw new Error('False Attack Coordinates')
+    return { error: 'Invalid Attack Coordinate' };
   }
 
   const allShipsSunk = () => shipCoordinates.every(shipObj => shipObj.ship.isSunk())

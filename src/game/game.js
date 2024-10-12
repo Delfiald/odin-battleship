@@ -25,6 +25,10 @@ const Game = (player1, player2) => {
     playerAttack: (x, y) => {
       const attackResult = currentPlayer.attack(opponentPlayer.gameboard, x, y);
 
+      if (attackResult.error) {
+        return null;
+      }
+
       if(!currentPlayer.isHuman) {
         if(attackResult.hit){
           computerPlayer.setIsHit(true)

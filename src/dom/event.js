@@ -20,6 +20,18 @@ const event = (gameState) => {
     })
   }
 
+  const addClassToCells = (coordinates, playerClass) => {
+    coordinates.forEach(ship => {
+      ship.coordinates.forEach(coord => {
+        const [row, col] = coord;
+        const shipCell = document.querySelector(`.${playerClass} .board .cell[data-cell="${row}, ${col}"]`);
+        if (shipCell) {
+          shipCell.classList.add('set');
+        }
+      });
+    });
+  };
+
   const renderPlaceShip = () => {
     const player1 = gameState.player1.gameboard;
     const player2 = gameState.player2.gameboard;
@@ -27,25 +39,36 @@ const event = (gameState) => {
     const player1Coordinates = player1.getShipCoordinates();
     const player2Coordinates = player2.getShipCoordinates();
 
-    const addClassToCells = (coordinates, playerClass) => {
-      coordinates.forEach(ship => {
-        ship.coordinates.forEach(coord => {
-          const [row, col] = coord;
-          const shipCell = document.querySelector(`.${playerClass} .board .cell[data-cell="${row}, ${col}"]`);
-          if (shipCell) {
-            shipCell.classList.add('set');
-          }
-        });
-      });
-    };
-
     addClassToCells(player1Coordinates, 'ship-placement-player-1');
     addClassToCells(player2Coordinates, 'ship-placement-player-2');
 
     if(!gameState.player2.isHuman){
       addClassToCells(player1Coordinates, 'player-1-section')
-    }else {
-      // const player = gameState.game.currentPlayer;
+    }
+  }
+
+  const cleanBoard = () => {
+    const cells = document.querySelectorAll('.board .cell');
+
+    cells.forEach(cell => {
+      cell.classList.remove('set')
+    })
+  }
+  
+  const switchRender = () => {
+    if(gameState.game){
+      cleanBoard()
+      const player1 = gameState.player1.gameboard;
+      const player2 = gameState.player2.gameboard;
+  
+      const player1Coordinates = player1.getShipCoordinates();
+      const player2Coordinates = player2.getShipCoordinates();
+      const player = gameState.game.getCurrentPlayer();
+      if(player === gameState.player1) {
+        addClassToCells(player1Coordinates, 'player-1-section')
+      }else {
+        addClassToCells(player2Coordinates, 'player-2-section')
+      }
     }
   }
 
@@ -204,8 +227,11 @@ const event = (gameState) => {
     if(target.closest('.ship-placement .ship-placement-container.p2 .next-btn') || target.closest('.ship-placement .ship-placement-container.one-player .next-btn')) {
       if(gameState.getShipFactory('player1').allShipsPlaced() && gameState.getShipFactory('player2').allShipsPlaced()){
         shipPlacement.remove()
-        document.querySelector('main .player-1-section').classList.add('active')
         gameState.startGame()
+        if(gameState.game.getCurrentPlayer() === gameState.player1) {
+          document.querySelector('main .player-1-section').classList.add('active')
+        }
+        switchRender()
       }else if (target.closest('.ship-placement-container.one-player')) {
         const player1 = document.querySelector('.ship-placement-player-1 .board-wrapper');
         player1.classList.add('shake');
@@ -291,11 +317,35 @@ const event = (gameState) => {
     }
   }
 
+  const handleBotAttack = (player1Section, player2Section) => {
+    setTimeout(() => {
+      const [aix, aiy] = gameState.game.isComputerPlayer()
+      const aiAttack = gameState.game.playerAttack(aix, aiy)
+
+      const p1Cell = document.querySelector(`.player-1-section .cell[data-cell="${aix}, ${aiy}"]`)
+
+      if(aiAttack.hit) {
+        p1Cell.classList.add('hit')
+      }else {
+        p1Cell.classList.add('missed')
+      }
+
+      player1Section.classList.add('active');
+      player2Section.classList.remove('active');
+
+      if (aiAttack.gameOver) {
+        player1Section.classList.add('active')
+        player2Section.classList.add('active')
+        console.log(`winner is Computer`)
+      }
+    }, 500);
+  }
+
   const handleBoardEvents = (target) => {
     const player1Section = document.querySelector('.player-1-section')
     const player2Section = document.querySelector('.player-2-section')
     const cell = target.closest('main .board .cell');
-    if(cell){
+    if(cell && gameState.game.getCurrentPlayer().isHuman){
       const cellCoordinate = cell.dataset.cell.split(',')
       const x = Number(cellCoordinate[0])
       const y = Number(cellCoordinate[1])
@@ -311,35 +361,26 @@ const event = (gameState) => {
       if (attackResult.gameOver) {
         player1Section.classList.add('active')
         player2Section.classList.add('active')
+        if(gameState.game.getCurrentPlayer() === gameState.player1){
+          console.log('winner player 1')
+        }else if(gameState.game.getCurrentPlayer() === gameState.player2){
+          console.log('winner player 2')
+        }
+
       } else if (gameState.game.getCurrentPlayer() === gameState.player2) {
         player1Section.classList.remove('active');
         player2Section.classList.add('active');
 
         if(!gameState.game.getCurrentPlayer().isHuman){
-          setTimeout(() => {
-            const [aix, aiy] = gameState.game.isComputerPlayer()
-            const aiAttack = gameState.game.playerAttack(aix, aiy)
-
-            const p1Cell = document.querySelector(`.player-1-section .cell[data-cell="${aix}, ${aiy}"]`)
-
-            if(aiAttack.hit) {
-              p1Cell.classList.add('hit')
-            }else {
-              p1Cell.classList.add('missed')
-            }
-
-            player1Section.classList.add('active');
-            player2Section.classList.remove('active');
-
-            if (aiAttack.gameOver) {
-              player1Section.classList.add('active')
-              player2Section.classList.add('active')
-            }
-          }, 1000);
+          handleBotAttack(player1Section, player2Section)
         }
       } else if (gameState.game.getCurrentPlayer() === gameState.player1) {
         player1Section.classList.add('active');
         player2Section.classList.remove('active');
+      }
+      
+      if(gameState.player2.isHuman) {
+        switchRender()
       }
     }
   }
