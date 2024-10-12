@@ -191,6 +191,62 @@ const createPlaceShip = () => {
   }
 }
 
+// Game Winner
+const createWinnerModal = () => {
+  const winnerModal = document.createElement('div')
+
+  winnerModal.className = 'winner'
+  const winnerContainer = document.createElement('div')
+  winnerContainer.className = 'winner-container'
+
+  const winnerWrapper = document.createElement('div')
+  winnerWrapper.className = 'winner-wrapper'
+
+  const winnerHeader = document.createElement('div')
+  winnerHeader.className = 'winner-header'
+  const winner = document.createElement('span')
+  winner.className = 'winner-name'
+  winner.textContent = 'Player 1 Win'
+  winnerHeader.appendChild(winner)
+
+  const winnerContent = document.createElement('div')
+  winnerContent.className = 'winner-content'
+
+  const winnerText = document.createElement('div')
+  winnerText.textContent = `Victory! You've sunk all enemy ships and won the battle!`
+
+  const restartButton = document.createElement('div')
+  restartButton.className = 'restart-btn btn'
+  const restartText = document.createElement('div')
+  restartText.textContent = 'Restart'
+  const restartIcon = document.createElement('i')
+  restartIcon.className = 'fas fa-rotate-left'
+  restartButton.appendChild(restartText)
+  restartButton.appendChild(restartIcon)
+
+  const exitButton = document.createElement('div')
+  exitButton.className = 'exit-btn btn'
+  const exitText = document.createElement('div')
+  exitText.textContent = 'Exit'
+  const exitIcon = document.createElement('i')
+  exitIcon.className = 'fas fa-right-from-bracket'
+  exitButton.appendChild(exitText)
+  exitButton.appendChild(exitIcon)
+  
+  winnerContent.appendChild(winnerText)
+  winnerContent.appendChild(restartButton)
+  winnerContent.appendChild(exitButton)
+
+  winnerWrapper.appendChild(winnerHeader)
+  winnerWrapper.appendChild(winnerContent)
+
+  winnerContainer.appendChild(winnerWrapper)
+
+  winnerModal.appendChild(winnerContainer)
+
+  return winnerModal
+}
+
 // Main
 const createMainSection = () => {
   const main = document.createElement('main')
@@ -362,12 +418,18 @@ const mainContainer = () => {
     return container
   }
 
+  const appendWinner = () => {
+    container.appendChild(createWinnerModal())
+    return container;
+  }
+
   return {
     appendHome,
     placeOnePlayer,
     placeTwoPlayer,
     appendMain,
-    appendMenu
+    appendMenu,
+    appendWinner
   };
 }
 

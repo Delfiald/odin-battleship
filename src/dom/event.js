@@ -2,7 +2,7 @@ import appendDom from './dom'
 
 const event = (gameState) => {
   const container = document.querySelector('.container')
-
+  const body = document.querySelector('body')
   const resetPlaceShip = (player) => {
     let cells
     if(player === 'player1'){
@@ -153,7 +153,6 @@ const event = (gameState) => {
   };
 
   const homeHandler = async(player2) => {
-    const body = document.querySelector('body')
     const home = document.querySelector('.home')
     home.style.animation = 'fade-out 1s ease-in-out forwards'
     await new Promise (resolve => {
@@ -186,13 +185,31 @@ const event = (gameState) => {
     shipPlacementContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   }
 
-  const handleMenuEvents = (target, body) => {
+  const restart = () => {
+    container.textContent = ''
+    if(gameState.player2.isHuman){
+      body.appendChild(appendDom.placeTwoPlayer())
+      gameState.setPlayer(true)
+      gameState.createShipFactories();
+    }else {
+      body.appendChild(appendDom.placeOnePlayer())
+      gameState.setPlayer(false)
+      gameState.createShipFactories();
+      gameState.player2.gameboard.setRandomShip(gameState.shipFactory2)
+    }
+    addShipPlacementEvent();
+    body.appendChild(appendDom.appendMain())
+  }
+
+  const handleMenuEvents = (target) => {
     if (target.closest('#menu-btn')) {
        body.appendChild(appendDom.appendMenu())
     } else if (target.closest('.menu .cancel-btn')) {
        document.querySelector('.menu').remove()
-    } else if(target.closest('.menu .exit-btn')) {
+    } else if(target.closest('.exit-btn')) {
       body.appendChild(appendDom.appendHome())
+    } else if(target.closest('.restart-btn')) {
+      restart()
     }
   }
 
@@ -336,7 +353,12 @@ const event = (gameState) => {
       if (aiAttack.gameOver) {
         player1Section.classList.add('active')
         player2Section.classList.add('active')
-        console.log(`winner is Computer`)
+
+        body.appendChild(appendDom.appendWinner())
+
+        document.querySelector('.winner-name').textContent = 'COM Win';
+
+        document.querySelector('.winner-content > div').textContent = 'All your ships have been sunk!';
       }
     }, 500);
   }
@@ -361,11 +383,16 @@ const event = (gameState) => {
       if (attackResult.gameOver) {
         player1Section.classList.add('active')
         player2Section.classList.add('active')
+        let winner
         if(gameState.game.getCurrentPlayer() === gameState.player1){
-          console.log('winner player 1')
+          winner = 'Player 1 Win'
         }else if(gameState.game.getCurrentPlayer() === gameState.player2){
-          console.log('winner player 2')
+          winner = 'Player 2 Win'
         }
+
+        body.appendChild(appendDom.appendWinner())
+
+        document.querySelector('.winner-name').textContent = winner;
 
       } else if (gameState.game.getCurrentPlayer() === gameState.player2) {
         player1Section.classList.remove('active');
@@ -387,9 +414,8 @@ const event = (gameState) => {
 
   container.addEventListener('click', (e) => {
     const {target} = e;
-    const body = document.querySelector('body');
  
-    handleMenuEvents(target, body);
+    handleMenuEvents(target);
     handleHomeEvents(target);
     handleShipPlacementEvents(target);
     handleBoardEvents(target)

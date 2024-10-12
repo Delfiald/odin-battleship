@@ -223,7 +223,8 @@ main > section .board-wrapper .board > div.hit {
   gap: 1rem;
 }
 
-.menu-wrapper .menu-content > div {
+.menu-wrapper .menu-content > div,
+.winner-wrapper .winner-content > div:not(div:first-child) {
   position: relative;
   height: 100%;
   display: flex;
@@ -238,7 +239,8 @@ main > section .board-wrapper .board > div.hit {
   z-index: 1;
 }
 
-.menu-wrapper .menu-content > div::before {
+.menu-wrapper .menu-content > div::before,
+.winner-wrapper .winner-content > div:not(div:first-child)::before {
   content: '';
   position: absolute;
   top: 0;
@@ -252,12 +254,14 @@ main > section .board-wrapper .board > div.hit {
   transition: var(--transition-fast) all ease-in-out;
 }
 
-.menu-wrapper .menu-content > div:hover::before {
+.menu-wrapper .menu-content > div:hover::before,
+.winner-wrapper .winner-content > div:not(div:first-child):hover::before {
   transform: scale(1);
   background: var(--color-light-600);
 }
 
-.menu-wrapper .menu-content > div > div {
+.menu-wrapper .menu-content > div > div,
+.winner-wrapper .winner-content > div > div {
   position: absolute;
   opacity: 0;
   transform: translateY(200%);
@@ -267,7 +271,8 @@ main > section .board-wrapper .board > div.hit {
   font-weight: bold;
 }
 
-.menu-wrapper .menu-content > div:hover > div {
+.menu-wrapper .menu-content > div:hover > div,
+.winner-wrapper .winner-content > div:hover > div {
   opacity: 1;
 }
 
@@ -547,6 +552,78 @@ main > section .board-wrapper .board > div.hit {
   justify-content: space-evenly;
   gap: 1rem;
   font-size: 1.5rem;
+}
+
+/* Winner */
+.winner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.winner-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.winner-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: var(--color-dark-200);
+  opacity: .5;
+  z-index: -1;
+}
+
+.winner .winner-wrapper {
+  background: var(--color-light-200);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 10px;
+  gap: 1rem;
+  max-width: 600px;
+  width: 100%;
+} 
+
+.winner .winner-wrapper .winner-header {
+  font-size: 2rem;
+  font-weight: bolder;
+}
+
+.winner .winner-wrapper .winner-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 200px;
+}
+
+.winner .winner-wrapper .winner-content > div:first-child {
+  grid-column: 1 / -1;
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.winner .winner-wrapper .winner-content > div:not(div:first-child) {
+  align-self: flex-start;
+  justify-self: center;
+  width: 3.5ch;
+  height: 3.5ch;
 }
 
 @keyframes fade-out {
