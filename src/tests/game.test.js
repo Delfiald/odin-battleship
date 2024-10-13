@@ -7,9 +7,9 @@ describe('Game', () => {
   let player2Ship;
 
   const createMockShips = () => [
-      { ship: Ship(3), coordinates: [[1, 1]] },
-      { ship: Ship(3), coordinates: [[2, 1]] },
-    ];
+    { ship: Ship(3), coordinates: [[1, 1]] },
+    { ship: Ship(3), coordinates: [[2, 1]] },
+  ];
 
   const createMockPlayers = () => {
     const player1 = Player(true);
@@ -45,7 +45,7 @@ describe('Game', () => {
   it('should return attack coordinates', () => {
     expect(gameInstance.playerAttack(1, 1)).toStrictEqual({
       coordinates: [1, 1],
-      hit: false
+      hit: false,
     });
   });
 
@@ -55,29 +55,29 @@ describe('Game', () => {
 
     expect(gameInstance.playerAttack(1, 3)).toStrictEqual({
       coordinates: [1, 3],
-      hit: true
-    });;
+      hit: true,
+    });
     expect(switchTurnsSpy).toHaveBeenCalled();
 
     expect(gameInstance.playerAttack(1, 2)).toStrictEqual({
       coordinates: [1, 2],
-      hit: true
+      hit: true,
     });
     expect(switchTurnsSpy).toHaveBeenCalledTimes(2);
 
     expect(gameInstance.playerAttack(2, 1)).toStrictEqual({
       coordinates: [2, 1],
-      hit: false
+      hit: false,
     });
     expect(switchTurnsSpy).toHaveBeenCalledTimes(3);
 
     expect(gameInstance.playerAttack(1, 3)).toStrictEqual({
       coordinates: [1, 3],
-      hit: true
+      hit: true,
     });
     expect(gameInstance.playerAttack(2, 3)).toStrictEqual({
       coordinates: [2, 3],
-      hit: false
+      hit: false,
     });
 
     expect(switchTurnsSpy).toHaveBeenCalledTimes(5);

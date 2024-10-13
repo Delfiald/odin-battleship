@@ -1,14 +1,15 @@
-import Gameboard from "./gameboard"
+import Gameboard from './gameboard';
 
 const Player = (isHuman = true) => {
   const gameboard = Gameboard();
-  const attack = (opponentGameBoard, x, y) => opponentGameBoard.receiveAttack(x, y)
+  const attack = (opponentGameBoard, x, y) =>
+    opponentGameBoard.receiveAttack(x, y);
 
   return {
     isHuman,
     gameboard,
-    attack
-  }
-}
+    attack,
+  };
+};
 
-export default Player
+export default Player;

@@ -1,5 +1,5 @@
-import Player from "../components/player"
-import Game from "./game";
+import Player from '../components/player';
+import Game from './game';
 
 // Store and Load Instance
 const GameState = () => {
@@ -9,7 +9,13 @@ const GameState = () => {
     shipFactory1: null,
     shipFactory2: null,
     game: null,
-    shipName: ['Carrier', 'Battleship', 'Destroyer', 'Submarine', 'Patrol Boat'],
+    shipName: [
+      'Carrier',
+      'Battleship',
+      'Destroyer',
+      'Submarine',
+      'Patrol Boat',
+    ],
 
     setPlayer: (isVsAi) => {
       gameState.player1 = Player(true);
@@ -18,7 +24,7 @@ const GameState = () => {
 
     getPlayers: () => ({
       player1: gameState.player1,
-      player2: gameState.player2
+      player2: gameState.player2,
     }),
 
     createShipFactories: () => {
@@ -26,7 +32,10 @@ const GameState = () => {
       gameState.shipFactory2 = gameState.player2.gameboard.createShipFactory();
     },
 
-    getShipFactory: (player) => player === gameState.player1 ? gameState.shipFactory1 : gameState.shipFactory2,
+    getShipFactory: (player) =>
+      player === gameState.player1
+        ? gameState.shipFactory1
+        : gameState.shipFactory2,
 
     resetShipFactoryForPlayer: (player) => {
       if (player === gameState.player1) {
@@ -37,11 +46,11 @@ const GameState = () => {
     },
 
     startGame: () => {
-      gameState.game = Game(gameState.player1, gameState.player2)
-    }
-  }
+      gameState.game = Game(gameState.player1, gameState.player2);
+    },
+  };
 
-  return gameState
-}
+  return gameState;
+};
 
-export default GameState
+export default GameState;

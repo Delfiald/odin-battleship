@@ -1,4 +1,4 @@
-import ComputerPlayer from "./computerPlayer";
+import ComputerPlayer from './computerPlayer';
 
 const Game = (player1, player2) => {
   let currentPlayer = player1;
@@ -8,16 +8,17 @@ const Game = (player1, player2) => {
 
   const gameMethods = {
     isComputerPlayer: () => {
-      let x; let y;
-      if(!currentPlayer.isHuman) {
-        try{
-          [x, y] = computerPlayer.setAttackCoordinate()
-        }catch(error) {
-          return error
+      let x;
+      let y;
+      if (!currentPlayer.isHuman) {
+        try {
+          [x, y] = computerPlayer.setAttackCoordinate();
+        } catch (error) {
+          return error;
         }
       }
 
-      return [x, y]
+      return [x, y];
     },
     switchTurns: () => {
       [currentPlayer, opponentPlayer] = [opponentPlayer, currentPlayer];
@@ -29,29 +30,29 @@ const Game = (player1, player2) => {
         return null;
       }
 
-      if(!currentPlayer.isHuman) {
-        if(attackResult.hit){
-          computerPlayer.setIsHit(true)
-        }else {
-          computerPlayer.setIsHit(false)
+      if (!currentPlayer.isHuman) {
+        if (attackResult.hit) {
+          computerPlayer.setIsHit(true);
+        } else {
+          computerPlayer.setIsHit(false);
         }
         computerPlayer.setLatestCoordinate([x, y]);
       }
 
-      const allShipsSunk = opponentPlayer.gameboard.allShipsSunk()
-      if(!allShipsSunk){
+      const allShipsSunk = opponentPlayer.gameboard.allShipsSunk();
+      if (!allShipsSunk) {
         gameMethods.switchTurns();
-      }else {
+      } else {
         attackResult.gameOver = true;
       }
 
-      return attackResult
+      return attackResult;
     },
 
-    getCurrentPlayer: () => currentPlayer
-  }
+    getCurrentPlayer: () => currentPlayer,
+  };
 
-  return gameMethods
+  return gameMethods;
 };
 
 export default Game;

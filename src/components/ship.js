@@ -2,26 +2,26 @@ const Ship = (shipLength) => {
   const shipProperty = {
     length: shipLength,
     hit: 0,
-    sunk: false
-  }
-  
+    sunk: false,
+  };
+
   const hit = () => {
     shipProperty.hit += 1;
-  }
+  };
 
   const isSunk = () => {
     if (shipProperty.hit >= shipProperty.length) {
       shipProperty.sunk = true;
     }
 
-    return shipProperty.sunk
-  }
+    return shipProperty.sunk;
+  };
 
   return {
     shipProperty,
     hit,
-    isSunk
-  }
-}
+    isSunk,
+  };
+};
 
-export default Ship
+export default Ship;

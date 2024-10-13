@@ -4,10 +4,10 @@ import event from './dom/event';
 import GameState from './game/gameState';
 
 (() => {
-  const body = document.querySelector('body')
+  const body = document.querySelector('body');
 
-  const gameState = GameState()
+  const gameState = GameState();
 
-  body.appendChild(appendDom.appendHome())
-  event(gameState)
-})()
+  body.appendChild(appendDom.appendHome());
+  event(gameState);
+})();
