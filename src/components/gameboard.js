@@ -37,7 +37,7 @@ const Gameboard = () => {
         hit: isHit
       }
     }
-    throw new Error('False Attack Coordinates')
+    return { error: 'Invalid Attack Coordinate' };
   }
 
   const allShipsSunk = () => shipCoordinates.every(shipObj => shipObj.ship.isSunk())
@@ -49,7 +49,7 @@ const Gameboard = () => {
   const setShipCoordinates = (shipLength, shipStartCoordinate, horizontal) => {
     const newCoordinates = []
     const currentCoordinate = shipStartCoordinate;
-    if(horizontal) {
+    if(!horizontal) {
       for(let i = 0; i < shipLength; i+=1){
         newCoordinates.push([currentCoordinate[0] + i, currentCoordinate[1]]);
       }
@@ -69,9 +69,6 @@ const Gameboard = () => {
 
       const newCoordinates = setShipCoordinates(shipLength, coordinates[0], isHorizontal);
 
-      console.log('try')
-      console.log(newCoordinates)
-
       newCoordinates.forEach(coordinate => {
         const [x, y] = coordinate;
         if (shipCoordinates.some(existingShip => containsArray(existingShip.coordinates, coordinate))) {
@@ -87,6 +84,10 @@ const Gameboard = () => {
 
       isHorizontal = true;
     });
+  }
+
+  const resetBoard = () => {
+    shipCoordinates = [];
   }
 
   const shipsList = () => {
@@ -117,20 +118,32 @@ const Gameboard = () => {
 
     const incrementIndex = () => {
       currentIndex += 1;
-  };
+    };
+
+    const getCurrentIndex = () => currentIndex
+
+    const resetCurrentIndex = () => {
+      currentIndex = 0
+    }
   
     return {
       getCurrentShip,
       placeNextShip,
       incrementIndex,
       allShipsPlaced: () => currentIndex >= ships.length,
+      getCurrentIndex,
+      resetCurrentIndex
     };
   };
 
-  const setRandomShip = () => {
-    const factory = createShipFactory()
+  const setRandomShip = (factory) => {
     let x;
     let y;
+
+    if(factory.getCurrentIndex() >= 5) {
+      resetBoard()
+      factory.resetCurrentIndex()
+    }
 
     while (!factory.allShipsPlaced()) {
       let isValidPlacement = false
@@ -143,31 +156,22 @@ const Gameboard = () => {
 
         tempCoordinates = [[x, y]]
 
-        console.log(tempCoordinates)
-
         try {
           setShips([factory.placeNextShip(tempCoordinates)]);
           factory.incrementIndex();
           isValidPlacement = true;
         } catch (error) {
-          console.log(error.message);
+          // return error
         }
-
-        console.log(isValidPlacement)
       }
     }
-
-    shipCoordinates.forEach(item => {
-      console.log(item.ship)
-      console.log(item.coordinates)
-    })
 
     return shipCoordinates;
   }
 
-  const resetBoard = () => {
-    shipCoordinates = [];
-  }
+  const getShipCoordinates = () => [...shipCoordinates];
+
+  const getOrientation = () => isHorizontal;
 
   return {
     receiveAttack,
@@ -176,7 +180,9 @@ const Gameboard = () => {
     toggleOrientation,
     resetBoard,
     setRandomShip,
-    createShipFactory
+    createShipFactory,
+    getShipCoordinates,
+    getOrientation
   }
 }
 
