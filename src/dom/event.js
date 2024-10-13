@@ -154,6 +154,11 @@ const event = (gameState) => {
       shipPlacement.remove()
       if(gameState.game.getCurrentPlayer() === gameState.player1) {
         document.querySelector('main .player-1-section').classList.add('active')
+
+        const main = document.querySelector('main');
+        const scrollAmount = main.clientWidth;
+    
+        main.scrollBy({ left: scrollAmount, behavior: 'smooth' });
       }
       switchRender()
     })
@@ -257,6 +262,7 @@ const event = (gameState) => {
       if(shipFactory.getCurrentIndex() >= 5) {
         shipNameHandler(board).setHidden()
       }
+      handleShipNotHoverEvents()
     }catch {
       const playerBoard = board.parentElement;
       shakeHandler(playerBoard)
@@ -278,6 +284,7 @@ const event = (gameState) => {
 
     cells.forEach(cell => {
       cell.classList.remove('set');
+      cell.classList.remove('hovered');
     })
   }
 
@@ -333,10 +340,24 @@ const event = (gameState) => {
     }
   }
 
+  const scrollHorizontalForSmallerScreen = () => {
+    const main = document.querySelector('main');
+    let scrollAmount
+    if(gameState.game.getCurrentPlayer() === gameState.player1){
+      scrollAmount = main.clientWidth;
+    }else {
+      scrollAmount = -main.clientWidth;
+    }
+
+    main.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
+
   // Player Section Toggle Class
   const playerClassToggle = (player1Section, player2Section) => {
     player1Section.classList.toggle('active');
     player2Section.classList.toggle('active');
+
+    scrollHorizontalForSmallerScreen()
   }
 
   // is Game Over
@@ -376,7 +397,7 @@ const event = (gameState) => {
       playerClassToggle(player1Section, player2Section)
 
       isGameOver(attackResult, player1Section, player2Section)
-    }, 500);
+    }, 750);
   }
 
   // Game Board Event
@@ -406,6 +427,38 @@ const event = (gameState) => {
     }
   }
 
+  // Touch Event
+  const touchEvent = () => {
+    let pressTimer;
+    let isLongPress = false;
+    const boardWrapper = document.querySelector('.ship-placement-container .board-wrapper')
+
+    boardWrapper.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const { target } = e;
+      isLongPress = false;
+      pressTimer = setTimeout(() => {
+        isLongPress = true
+        handleShipFlipEvents(target)
+      }, 500)
+    })
+
+    boardWrapper.addEventListener('touchend', (e) => {
+      clearTimeout(pressTimer);
+
+      if(!isLongPress) {
+        const {target} = e;
+        if(target.closest('.cell')){
+          manualShipPlacementHandler(target)
+        }
+      }
+    });
+
+    boardWrapper.addEventListener('touchmove', () => {
+      clearTimeout(pressTimer);
+    });
+  }
+
   // MENU
   // Restart
   const restart = () => {
@@ -421,6 +474,7 @@ const event = (gameState) => {
       gameState.player2.gameboard.setRandomShip(gameState.shipFactory2)
     }
     addShipPlacementEvent();
+    touchEvent()
     body.appendChild(appendDom.appendMain())
   }
   
@@ -463,6 +517,7 @@ const event = (gameState) => {
     }
 
     addShipPlacementEvent();
+    touchEvent()
     body.appendChild(appendDom.appendMain())
   }
 
@@ -493,6 +548,7 @@ const event = (gameState) => {
     }
   }
 
+  // Click Event
   container.addEventListener('click', (e) => {
     const {target} = e;
  

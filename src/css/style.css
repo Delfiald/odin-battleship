@@ -151,7 +151,7 @@ main > section.active .board-wrapper .board {
 
 main > section .board-wrapper .board > div {
   position: relative;
-  border: 1px solid var(--color-light-600);
+  border: 1px solid var(--color-dark-600);
   cursor: pointer;
   border-radius: 10px;
   transition: transform var(--transition-fast) ease, border var(--transition-fast) ease;
@@ -590,6 +590,7 @@ main > section .board-wrapper .board > div.hit::after {
   align-items: center;
   justify-content: start;
   gap: 1rem;
+  position: relative;
 }
 
 .ship-placement .placement-footer .placement-info i {
@@ -603,6 +604,13 @@ main > section .board-wrapper .board > div.hit::after {
   border: 1px solid var(--color-light-600);
   color: var(--color-dark-200);
   box-shadow: 0px 0px 3px var(--color-dark-200);
+}
+
+.ship-placement .placement-footer .placement-info > div:last-child {
+  position: absolute;
+  line-height: 1;
+  margin-left: 2rem;
+  opacity: 0;
 }
 
 .ship-placement .placement-footer .placement-control {
@@ -795,4 +803,118 @@ main > section .board-wrapper .board > div.hit::after {
   80% { transform: translate(5px, -5px); }
   90% { transform: translate(-5px, 5px); }
   100% { transform: translate(0, 0); }
+}
+
+@media (max-width: 1200px) {
+  main {
+    grid-template-columns: repeat(2, calc(70vh - 3.5rem));
+  }
+
+  main > section .board-wrapper {
+    grid-template-columns: repeat(2, calc(70vh - 4.5rem));
+    grid-template-rows: calc(70vh - 4.5rem);
+  }
+}
+
+@media (max-width: 1100px) and (orientation: portrait) {
+  main {
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    justify-content: start;
+    gap: 1rem;
+  }
+
+  main::before {
+    content: none;
+  }
+
+  main > section {
+    height: min-content;
+    gap: 1rem;
+    scroll-snap-align: center;
+    transform: scale(1);
+  }
+
+  main > section .player-information {
+    justify-self: start;
+  }
+
+  main > section .board-wrapper {
+    flex: 0 0 1;
+    padding: 0;
+    grid-template-columns: repeat(2, calc(100vw - 2rem));
+    grid-template-rows: calc(100vw - 2rem);
+  }
+
+  .ship-placement .placement-footer .placement-info > div:first-of-type {
+    opacity: 0;
+  }
+
+  .ship-placement .placement-footer .placement-info > div:last-child {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  main::before {
+    content: none;
+  }
+
+  main > section {
+    scroll-snap-align: center;
+    transform: scale(1);
+  }
+
+  main > section .board-wrapper {
+    grid-template-columns: repeat(2, calc(100vw - 2rem));
+    grid-template-rows: calc(100vw - 2rem);
+  }
+
+  .home {
+    gap: 1rem;
+  }
+
+  .home .home-header {
+    flex: 1;
+    transition: var(--transition-fast) ease-in-out all;
+  }
+
+  .home.play .home-header {
+    flex: .5;
+  }
+
+  .home .home-content .opponent-selection {
+    grid-template-columns: 100px;
+  }
+
+  .home .home-content .opponent-selection > div {
+    white-space: nowrap;
+  }
+
+  .home .home-content .opponent-selection .start-btn {
+    order: 0;
+  }
+
+  .home .home-content .opponent-selection > div {
+    order: -1;
+  }
+
+  .home .home-content .opponent-selection .back-btn {
+    order: 1;
+  }
+
+  .ship-placement .ship-placement-container {
+    max-width: calc(100vw - .5rem);
+  }
+
+  .ship-placement-container .board-wrapper {
+    grid-template-columns: calc(100vw - 1.5rem);
+    grid-template-rows: calc(100vw - 1.5rem);
+  }
+
+  .menu-wrapper {
+    max-width: calc(100vw - 1rem);
+  }
 }
