@@ -1,6 +1,7 @@
 import Player from "../components/player"
 import Game from "./game";
 
+// Store and Load Instance
 const GameState = () => {
   const gameState = {
     player1: null,
@@ -25,13 +26,13 @@ const GameState = () => {
       gameState.shipFactory2 = gameState.player2.gameboard.createShipFactory();
     },
 
-    getShipFactory: (player) => player === 'player1' ? gameState.shipFactory1 : gameState.shipFactory2,
+    getShipFactory: (player) => player === gameState.player1 ? gameState.shipFactory1 : gameState.shipFactory2,
 
     resetShipFactoryForPlayer: (player) => {
-      if (player === 'player1') {
-        gameState.shipFactory1 = gameState.player1.gameboard.createShipFactory();
-      } else if (player === 'player2') {
-        gameState.shipFactory2 = gameState.player2.gameboard.createShipFactory();
+      if (player === gameState.player1) {
+        gameState.shipFactory1 = player.gameboard.createShipFactory();
+      } else if (player === gameState.player2) {
+        gameState.shipFactory2 = player.gameboard.createShipFactory();
       }
     },
 
