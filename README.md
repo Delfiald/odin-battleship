@@ -1,5 +1,9 @@
 # Odin Battleship
 
+## Live Preview
+
+You can play the game live at: [Live Preview](https://delfiald.github.io/odin-battleship/)
+
 ## Descriptions
 
 Odin Battleship is a web-based implementation of the classic Battleship game. This project allows players to place ships on a gameboard and engage in a turn-based battle with either a human opponent or a computer AI.
