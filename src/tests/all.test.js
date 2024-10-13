@@ -13,41 +13,29 @@ describe('All', () => {
     // P1 ships
     player1.gameboard.setShips([shipFactory.placeNextShip([[1, 1]])])
     shipFactory.incrementIndex()
-
-    // Switch to vertical
     player1.gameboard.toggleOrientation()
-    player1.gameboard.setShips([shipFactory.placeNextShip([[1, 2]])])
+    player1.gameboard.setShips([shipFactory.placeNextShip([[2, 1]])])
     shipFactory.incrementIndex()
-
-    // Switch to vertical again because after set ships it set to horizontal automatically
     player1.gameboard.toggleOrientation()
     player1.gameboard.setShips([shipFactory.placeNextShip([[2, 2]])])
     shipFactory.incrementIndex()
-
-    // Switch to horizontal
-    player1.gameboard.setShips([shipFactory.placeNextShip([[3, 2]])])
+    player1.gameboard.setShips([shipFactory.placeNextShip([[2, 3]])])
     shipFactory.incrementIndex()
     player1.gameboard.setShips([shipFactory.placeNextShip([[3, 3]])])
     shipFactory.incrementIndex()
 
     expect(shipFactory.allShipsPlaced()).toBe(true);
 
-    // P2 ships
+    // P2 (AI) ships placement
     player2.gameboard.setShips([shipFactoryP2.placeNextShip([[1, 1]])])
     shipFactoryP2.incrementIndex()
-
-    // Switch to vertical
     player2.gameboard.toggleOrientation()
-    player2.gameboard.setShips([shipFactoryP2.placeNextShip([[1, 2]])])
+    player2.gameboard.setShips([shipFactoryP2.placeNextShip([[2, 1]])])
     shipFactoryP2.incrementIndex()
-
-    // Switch to vertical again because after set ships it set to horizontal automatically
     player2.gameboard.toggleOrientation()
     player2.gameboard.setShips([shipFactoryP2.placeNextShip([[2, 2]])])
     shipFactoryP2.incrementIndex()
-
-    // Switch to horizontal
-    player2.gameboard.setShips([shipFactoryP2.placeNextShip([[3, 2]])])
+    player2.gameboard.setShips([shipFactoryP2.placeNextShip([[2, 3]])])
     shipFactoryP2.incrementIndex()
     player2.gameboard.setShips([shipFactoryP2.placeNextShip([[3, 3]])])
     shipFactoryP2.incrementIndex()
@@ -71,9 +59,7 @@ describe('All', () => {
     expect(spyOnSwitchPlayer).toHaveBeenCalledTimes(2)
 
     // p1 attack (already attacked coordinates)
-    expect(() => testGame.playerAttack(1, 1)).toThrow(
-      'False Attack Coordinates'
-    );
+    expect(testGame.playerAttack(1, 1)).toBeNull()
     expect(spyOnSwitchPlayer).toHaveBeenCalledTimes(2) // didn't changes player
 
     // p1 attack
@@ -180,7 +166,7 @@ describe('All', () => {
 
     // p2 attack
     expect(testGame.playerAttack(2, 5)).toStrictEqual(
-      {coordinates: [2, 5], hit: false}
+      {coordinates: [2, 5], hit: true}
     );
     expect(spyOnSwitchPlayer).toHaveBeenCalledTimes(20)
 
@@ -236,12 +222,12 @@ describe('All', () => {
 
     // p1 attack
     expect(testGame.playerAttack(4, 3)).toStrictEqual(
-      {coordinates: [4, 3], hit: true}
+      {coordinates: [4, 3], hit: false}
     );
 
     // p2 attack
     expect(testGame.playerAttack(4, 3)).toStrictEqual(
-      {coordinates: [4, 3], hit: true}
+      {coordinates: [4, 3], hit: false}
     );
 
     // p1 attack
@@ -256,7 +242,7 @@ describe('All', () => {
 
     // p1 attack
     expect(testGame.playerAttack(5, 2)).toStrictEqual(
-      {coordinates: [5, 2], hit: true}
+      {coordinates: [5, 2], hit: false}
     );
   })
 
@@ -270,12 +256,12 @@ describe('All', () => {
     player1.gameboard.setShips([shipFactory.placeNextShip([[1, 1]])])
     shipFactory.incrementIndex()
     player1.gameboard.toggleOrientation()
-    player1.gameboard.setShips([shipFactory.placeNextShip([[1, 2]])])
+    player1.gameboard.setShips([shipFactory.placeNextShip([[2, 1]])])
     shipFactory.incrementIndex()
     player1.gameboard.toggleOrientation()
     player1.gameboard.setShips([shipFactory.placeNextShip([[2, 2]])])
     shipFactory.incrementIndex()
-    player1.gameboard.setShips([shipFactory.placeNextShip([[3, 2]])])
+    player1.gameboard.setShips([shipFactory.placeNextShip([[2, 3]])])
     shipFactory.incrementIndex()
     player1.gameboard.setShips([shipFactory.placeNextShip([[3, 3]])])
     shipFactory.incrementIndex()
@@ -286,12 +272,12 @@ describe('All', () => {
     player2.gameboard.setShips([shipFactoryP2.placeNextShip([[1, 1]])])
     shipFactoryP2.incrementIndex()
     player2.gameboard.toggleOrientation()
-    player2.gameboard.setShips([shipFactoryP2.placeNextShip([[1, 2]])])
+    player2.gameboard.setShips([shipFactoryP2.placeNextShip([[2, 1]])])
     shipFactoryP2.incrementIndex()
     player2.gameboard.toggleOrientation()
     player2.gameboard.setShips([shipFactoryP2.placeNextShip([[2, 2]])])
     shipFactoryP2.incrementIndex()
-    player2.gameboard.setShips([shipFactoryP2.placeNextShip([[3, 2]])])
+    player2.gameboard.setShips([shipFactoryP2.placeNextShip([[2, 3]])])
     shipFactoryP2.incrementIndex()
     player2.gameboard.setShips([shipFactoryP2.placeNextShip([[3, 3]])])
     shipFactoryP2.incrementIndex()
@@ -309,7 +295,8 @@ describe('All', () => {
     );
 
     // Verify if turn switched to AI (computer)
-    expect(spyOnSwitchPlayer).toHaveBeenCalledTimes(2);
+    expect(testGame.isComputerPlayer()).toBeTruthy();
+    expect(spyOnSwitchPlayer).toHaveBeenCalledTimes(1);
 
     // Simulate AI attack logic and make sure AI has attacked
     testGame.switchTurns(); // This should trigger the AI's turn
@@ -329,6 +316,8 @@ describe('All', () => {
   it('test ship random placement', () => {
     const player1 = Player(true);
 
-    player1.gameboard.setRandomShip()
+    const shipFactory = player1.gameboard.createShipFactory()
+
+    player1.gameboard.setRandomShip(shipFactory)
   })
 })

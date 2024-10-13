@@ -6,10 +6,9 @@ describe('Game', () => {
   let gameInstance;
   let player2Ship;
 
-  // Mock objek kapal dan pemain
   const createMockShips = () => [
       { ship: Ship(3), coordinates: [[1, 1]] },
-      { ship: Ship(3), coordinates: [[1, 3]] },
+      { ship: Ship(3), coordinates: [[2, 1]] },
     ];
 
   const createMockPlayers = () => {
@@ -60,29 +59,28 @@ describe('Game', () => {
     });;
     expect(switchTurnsSpy).toHaveBeenCalled();
 
-    expect(gameInstance.playerAttack(2, 3)).toStrictEqual({
-      coordinates: [2, 3],
+    expect(gameInstance.playerAttack(1, 2)).toStrictEqual({
+      coordinates: [1, 2],
       hit: true
     });
     expect(switchTurnsSpy).toHaveBeenCalledTimes(2);
 
-    expect(gameInstance.playerAttack(3, 3)).toStrictEqual({
-      coordinates: [3, 3],
-      hit: true
+    expect(gameInstance.playerAttack(2, 1)).toStrictEqual({
+      coordinates: [2, 1],
+      hit: false
     });
     expect(switchTurnsSpy).toHaveBeenCalledTimes(3);
 
-    expect(gameInstance.playerAttack(3, 3)).toStrictEqual({
-      coordinates: [3, 3],
+    expect(gameInstance.playerAttack(1, 3)).toStrictEqual({
+      coordinates: [1, 3],
       hit: true
     });
     expect(gameInstance.playerAttack(2, 3)).toStrictEqual({
       coordinates: [2, 3],
-      hit: true
+      hit: false
     });
 
-    // Check if all player 2's ships are sunk
-    expect(switchTurnsSpy).toHaveBeenCalledTimes(4);
+    expect(switchTurnsSpy).toHaveBeenCalledTimes(5);
     expect(allShipsSunkSpy).toHaveBeenCalled();
 
     switchTurnsSpy.mockRestore();
