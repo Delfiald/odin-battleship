@@ -13,8 +13,37 @@ const createNavbar = () => {
   hero.className = 'hero'
   hero.textContent = 'Battleship'
 
+  const socials = document.createElement('div')
+  socials.className = 'socials-wrapper'
+
+  const github = document.createElement('div')
+  github.className = 'github btn'
+  const githubButton = document.createElement('a')
+  githubButton.href = 'https://github.com/Delfiald'
+  githubButton.rel = 'noopener noreferrer'
+  githubButton.target = '_blank'
+  const githubIcon = document.createElement('i')
+  githubIcon.className = 'fab fa-github'
+  githubButton.appendChild(githubIcon)
+  github.appendChild(githubButton)
+
+  const linkedin = document.createElement('div')
+  linkedin.className = 'linkedin btn'
+  const linkedinButton = document.createElement('a')
+  linkedinButton.href = 'https://linkedin.com/in/m-aldi-gunawan-7b1133247'
+  linkedinButton.rel = 'noopener noreferrer'
+  linkedinButton.target = '_blank'
+  const linkedinIcon = document.createElement('i')
+  linkedinIcon.className = 'fab fa-linkedin'
+  linkedinButton.appendChild(linkedinIcon)
+  linkedin.appendChild(linkedinButton)
+
+  socials.appendChild(github)
+  socials.appendChild(linkedin)
+
   header.appendChild(menuButton)
   header.appendChild(hero)
+  header.appendChild(socials)
 
   return header
 }
@@ -77,10 +106,12 @@ const createShipPlacement = (playerIndex) => {
 
   placeShipOwner.textContent = `Player ${playerIndex} Fleet`
   const placeShipTemplate = document.createElement('div')
-  placeShipTemplate.textContent = 'Place your '
+  const placeShipTemplateText = document.createElement('span')
+  placeShipTemplateText.textContent = 'Place your '
   const placeShipName = document.createElement('span')
   placeShipName.className = 'ship-name'
   placeShipName.textContent = 'Carrier'
+  placeShipTemplate.appendChild(placeShipTemplateText)
   placeShipTemplate.appendChild(placeShipName)
 
   placeShipHeader.appendChild(placeShipOwner)

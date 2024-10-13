@@ -8,6 +8,7 @@ const GameState = () => {
     shipFactory1: null,
     shipFactory2: null,
     game: null,
+    shipName: ['Carrier', 'Battleship', 'Destroyer', 'Submarine', 'Patrol Boat'],
 
     setPlayer: (isVsAi) => {
       gameState.player1 = Player(true);

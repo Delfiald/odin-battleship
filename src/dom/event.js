@@ -243,12 +243,19 @@ const event = (gameState) => {
     const shipPlacement = document.querySelector('.ship-placement')
     if(target.closest('.ship-placement .ship-placement-container.p2 .next-btn') || target.closest('.ship-placement .ship-placement-container.one-player .next-btn')) {
       if(gameState.getShipFactory('player1').allShipsPlaced() && gameState.getShipFactory('player2').allShipsPlaced()){
-        shipPlacement.remove()
         gameState.startGame()
-        if(gameState.game.getCurrentPlayer() === gameState.player1) {
-          document.querySelector('main .player-1-section').classList.add('active')
-        }
-        switchRender()
+        shipPlacement.style.animation = 'fade-out .5s ease forwards'
+        shipPlacement.addEventListener('animationend', () => {
+          shipPlacement.remove()
+          const main = document.querySelector('main')
+          main.style.animation = 'scale-up-down .5s ease forwards'
+          main.addEventListener('animationend', () => {
+            if(gameState.game.getCurrentPlayer() === gameState.player1) {
+              document.querySelector('main .player-1-section').classList.add('active')
+            }
+            switchRender()
+          })
+        })
       }else if (target.closest('.ship-placement-container.one-player')) {
         const player1 = document.querySelector('.ship-placement-player-1 .board-wrapper');
         player1.classList.add('shake');
@@ -300,6 +307,12 @@ const event = (gameState) => {
         if(shipFactory.allShipsPlaced()) {
           board.classList.add('disabled');
         }
+        const shipName = board.parentElement.parentElement.querySelector('.ship-name')
+        shipName.textContent = gameState.shipName[shipFactory.getCurrentIndex()]
+
+        if(shipFactory.getCurrentIndex() >= 5) {
+          shipName.parentElement.style.visibility = 'hidden'
+        }
       }catch(error) {
         board.parentElement.classList.add('shake')
         board.parentElement.addEventListener('animationend', () => {
@@ -317,20 +330,32 @@ const event = (gameState) => {
         resetPlaceShip('player2')
         board = document.querySelector('.ship-placement-player-2 .board')
       }
+      const shipName = board.parentElement.parentElement.querySelector('.ship-name')
+      shipName.parentElement.style.visibility = 'hidden'
       board.classList.add('disabled');
       renderPlaceShip()
     }else if(target.closest('.ship-placement .reset-btn')) {
+      let board;
+      let factoryShip;
       if(target.closest('.ship-placement-player-1')){
         gameState.player1.gameboard.resetBoard()
         gameState.resetShipFactoryForPlayer('player1')
         resetPlaceShip('player1')
-        document.querySelector('.ship-placement-player-1 .board').classList.remove('disabled')
+        board = document.querySelector('.ship-placement-player-1 .board')
+        factoryShip = gameState.getShipFactory('player1')
       }else if(target.closest('.ship-placement-player-2')){
         gameState.player2.gameboard.resetBoard()
         gameState.resetShipFactoryForPlayer('player2')
         resetPlaceShip('player2')
-        document.querySelector('.ship-placement-player-2 .board').classList.remove('disabled')
+        board = document.querySelector('.ship-placement-player-2 .board')
+        factoryShip = gameState.getShipFactory('player2')
       }
+
+      board.classList.remove('disabled')
+
+      const shipName = board.parentElement.parentElement.querySelector('.ship-name')
+      shipName.parentElement.style.visibility = 'visible'
+      shipName.textContent = gameState.shipName[factoryShip.getCurrentIndex()]
     }
   }
 
