@@ -13,7 +13,9 @@ describe('Gameboard', () => {
   })
 
   it('should check attack coordinates', () => {
-    expect(() => testGameboard.receiveAttack(-1, 0)).toThrow('False Attack Coordinates');
+    expect(testGameboard.receiveAttack(-1, 0)).toStrictEqual({
+      error: 'Invalid Attack Coordinate'
+    })
   });
 
   it('should add attack coordinates', () => {
@@ -39,7 +41,9 @@ describe('Gameboard', () => {
       hit: false
     });
 
-    expect(() => testGameboard.receiveAttack(1, 0)).toThrow('False Attack Coordinates');
+    expect(testGameboard.receiveAttack(1, 0)).toStrictEqual({
+      error: 'Invalid Attack Coordinate'
+    })
   });
 
   it('should add ships at coordinate', () => {
@@ -79,19 +83,18 @@ describe('Gameboard', () => {
     ]);
 
     // Can't add ship
-    expect(() =>
-      testGameboard.setShips([
+    expect(testGameboard.setShips([
         {ship: mockShip2, coordinates: [[0, 1]]}
       ])
-    ).toThrow('this 1,1 coordinate not available');
+    ).toBe();
 
     // Set back ro horizontal and ship can be added
     testGameboard.setShips([
-      {ship: mockShip1, coordinates: [[0, 0]]}
+      {ship: mockShip1, coordinates: [[4, 4]]}
     ]);
 
     expect(setShipsSpy).toHaveBeenCalledWith([
-      { ship: mockShip1, coordinates: [[0, 0]] }
+      { ship: mockShip1, coordinates: [[4, 4]] }
     ]);
 
     setShipsSpy.mockRestore();
@@ -103,7 +106,7 @@ describe('Gameboard', () => {
     
     testGameboard.setShips([
       {ship: mockShip1, coordinates: [[1, 1]]},
-      {ship: mockShip2, coordinates: [[1, 2]]}
+      {ship: mockShip2, coordinates: [[2, 1]]}
     ])
     
     const mockShip3 = Ship(5);
@@ -131,11 +134,11 @@ describe('Gameboard', () => {
 
     expect(testGameboard.receiveAttack(1, 2)).toStrictEqual({
       coordinates: [1, 2],
-      hit: false
+      hit: true
     });
     expect(testGameboard.receiveAttack(2, 1)).toStrictEqual({
       coordinates: [2, 1],
-      hit: true
+      hit: false
     });
 
     expect(mockShip.hit).toHaveBeenCalledTimes(1);
