@@ -130,9 +130,12 @@ const createShipPlacement = (playerIndex) => {
   placeShipInfoIcon.className = 'fas fa-info'
   const placeShipInfoText = document.createElement('div')
   placeShipInfoText.textContent = 'Right Click to Rotate Ship'
+  const placeShipInfoTextMobile = document.createElement('div')
+  placeShipInfoTextMobile.textContent = 'Touch and Hold to Rotate the Ship'
 
   placeShipInfo.appendChild(placeShipInfoIcon)
   placeShipInfo.appendChild(placeShipInfoText)
+  placeShipInfo.appendChild(placeShipInfoTextMobile)
 
   // Place Ship Control
   const placeShipControl = document.createElement('div')
